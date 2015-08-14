@@ -1,0 +1,343 @@
+---
+layout: pages
+category: overview
+title: Mapbox Android SDK
+mapid: examples.map-i86nkdio
+navigation:
+- title: Installation
+  items:
+  - text: Gradle
+    hash: gradle
+  - text: Eclipse
+    hash: eclipse
+  - text: Source
+    hash: source
+- title: Getting started
+  items:
+  - text: Required permissions
+    hash: required-permissions
+  - text: The MapView
+    hash: the-mapview
+  - text: Overlays
+    hash: overlays
+  - text: Screen rotation
+    hash: screen-rotation
+  - text: Including SDK JavaDoc
+    hash: including-sdk-javadoc
+  - text: Generating SDK Documentation (aka JavaDoc)
+    hash: generating-sdk-documentation
+---
+
+<div class='row6 contain fill-grey round-top clip clearfix keyline-all'>
+ <div id='example-map' class='pin-bottom pin-top round-top'></div>
+  <div id='example-snippet' class='snippet pin-bottom margin2 row2 col8'>
+    <div class='clip row2 fill-light pad2x'>
+{% highlight java %}
+// Create a new MapView passing Context
+MapView mapView = new MapView(this);
+mapView.setTileSource(new MapboxTileLayer("username.mapid"));
+{% endhighlight %}
+    </div>
+  </div>
+</div>
+
+<script>
+$(function load() {
+    L.mapbox.accessToken = window.mapbox_accessToken;
+    L.mapbox.map('example-map', '{{page.mapid}}', {
+      scrollWheelZoom: false,
+      center: [43.075, -89.382], zoom: 15
+    });
+
+    var mapid = App.storage('map.id'),
+        exampleid = 'username.mapid';
+
+    if (mapid && (mapid || '').indexOf(App.user.id) === 0) {
+        exampleid = mapid;
+    }
+
+    // Replace username.mapid with the current one.
+    $('pre, code').each(function() {
+        $(this).html($(this).html().replace(/username.mapid/g, exampleid));
+    });
+});
+</script>
+
+<div class='space-bottom2 pad2 quiet keyline-bottom keyline-left keyline-right fill-white prose round-bottom center clearfix'>
+  <div class='col10 margin1'>
+    <p>An <a href='https://github.com/mapbox/mapbox-android-sdk/'>open source</a> toolkit for building native map applications on Android.</p>
+  </div>
+</div>
+
+<div id='installation' class='keyline-all fill-darken0 space-bottom round'>
+  <div class='pad1y pad2x keyline-bottom strong small clearfix'>
+
+    <div class='fr dark'><!--
+      --><span class='fill-darken1 pad1x round-left inline'>Mapbox Android SDK</span><!--
+      --><span class='pad1x inline round-right keyline-left quiet dark fill-darken2'>0.7.4</span>
+    </div>
+    Installation
+  </div>
+  <nav class='fill-white round-bottom'>
+    <div id='gradle' class='install pad1y pad2x keyline-bottom contain'>
+      <a href='#gradle' class='block small strong'>Gradle</a>
+      <div class='pad1y prose'>
+        <div class='pin-right'>
+          <a href='#installation' class='icon x button quiet unround'></a>
+        </div>
+        <p>We recommend installing with <a href='http://www.gradle.org'>Gradle</a>. This will automatically install the necessary dependencies and pull the SDK binaries from the Maven Central repository <a href='http://search.maven.org/#artifactdetails%7Ccom.mapbox.mapboxsdk%7Cmapbox-android-sdk%7C0.7.4%7Cjar'>Mapbox Android SDK on Maven Central</a>.</p>
+        <p>To install the current <strong>stable</strong> version add this to your <code>build.gradle</code>:</p>
+
+{% highlight groovy %}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:0.7.4@aar'){
+        transitive=true
+    }
+}
+
+{% endhighlight %}
+
+          <p>To install the current <strong>SNAPSHOT</strong> version add this to your <code>build.gradle</code>:</p>
+
+{% highlight groovy %}
+repositories {
+    mavenCentral()
+    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+dependencies {
+    compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:0.7.5-SNAPSHOT@aar'){
+        transitive=true
+    }
+}
+{% endhighlight %}
+
+
+          <p>For a full example Android project incorporating the SDK in this manner, please see the Mapbox Dev Preview app.</p>
+
+          <ul>
+              <li>Source: <a href="https://github.com/mapbox/mapbox-android-demo" target="_blank">https://github.com/mapbox/mapbox-android-demo</a></li>
+              <li>Free download to your Android device from Google Play: <a href="https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo" target="_blank">https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo</a></li>
+          </ul>
+
+        <h3>NOTE: SDK Versions</h3>
+        <p>At any given time there will be 3 different versions of the SDK to use.  You're welcome to use whichever one makes the most sense for your project, just be aware that each comes with a different level of <strong>stability</strong>.  The installation instructions below all describe how to use the <code>Stable / Supported</code> version (although the SNAPSHOT version can make use of the same instructions.  Just need to update the Repo and the Version Number).</p>
+
+        <ol>
+          <li>Stable / Supported.</li>
+            <ul>
+                <li>Currently <code>0.7.4</code></li>
+            </ul>
+          <li>SNAPSHOT</li>
+            <ul>
+                <li>Currently <code>0.7.5-SNAPSHOT</code></li>
+            </ul>
+          <li>Source</li>
+        </ol>
+        <h3>Manually / Hardcoding In Project</h3>
+
+        <p>Download and include the mapbox-android-sdk.aar file and all artifacts (.aar, .jar files, and Android support / compatibility libraries listed) listed in <a href="https://github.com/mapbox/mapbox-android-sdk/blob/mb-pages/MapboxAndroidSDK/build.gradle" target="_blank"><code>MapboxAndroidSDK / build.gradle</code></a>. For those new to Gradle the artifacts are listed in the dependencies block. <strong>These will change over time</strong> so please check back regularly.</p>
+
+      </div>
+    </div>
+
+    <div id='eclipse' class='install pad1y pad2x keyline-bottom contain'>
+      <a href='#eclipse' class='block small strong'>Eclipse <em>(experimental)</em></a>
+      <div class='pad1y prose'>
+        <div class='pin-right'>
+          <a href='#installation' class='icon x button quiet unround'></a>
+        </div>
+        <p>The Mapbox Android SDK is also packaged as a <code>.apklib</code> file. This allows integration with older tools (Eclipse) that don't support the <code>.aar</code> format yet. In order to make this work the project will need to make use of <a href="http://maven.apache.org/" target="_blank">Maven</a>, and it the case of Eclipse the <a href="http://eclipse.org/m2e/" target="_blank">M2Eclipse</a> Maven plugin. From there configure the Maven pom.xml to include the following dependency:</p>
+{% highlight xml %}
+<dependency>
+    <groupId>com.mapbox.mapboxsdk</groupId>
+    <artifactId>mapbox-android-sdk</artifactId>
+    <version>0.7.4</version>
+    <type>apklib</type>
+</dependency>
+{% endhighlight %}
+          <p>For more information on how to use Maven and Eclipse together please see Sonatype's <a href="http://books.sonatype.com/m2eclipse-book/reference/" target="_blank">Developing with Eclipse and Maven</a> tutorial.</p>
+          <p><strong>Hardcoding:</strong></p>
+          <p>The best way to make sure that the Mapbox Android SDK is setup properly (as well as updated as new versions are released) is to make use of Gradle or Maven as documented above. However, if that's not possible the Mapbox Android SDK can also be added to the project by hardcoding it in. Please note that this is <strong>extremely brittle</strong> and not scalable.</p>
+          <p>Instructions for doing this can be found on the <a href="https://github.com/mapbox/mapbox-android-sdk#eclipse-hardcoding---not-recommended">project's GitHub README</a> Web page.</p>
+      </div>
+    </div>
+
+    <div id='source' class='install pad1y pad2x contain'>
+      <a href='#source' class='strong block small'>Source</a>
+      <div class='pad1y prose'>
+        <div class='pin-right'>
+          <a href='#installation' class='icon x button quiet unround'></a>
+        </div>
+        <p>Building from source means you get the very latest version of our code. The first step is to clone the repository to a directory in your system</p>
+
+{% highlight bash %}
+git clone https://github.com/mapbox/mapbox-android-sdk.git
+{% endhighlight %}
+
+        <p>We use Gradle as a configuration and build tool: to use it with your IDE, import the project by selecting <code>build.gradle</code> in the project root directory as the project file.</p>
+
+        <p>Don't worry about installing Gradle on your system if you don't already have it:  the project makes use of Gradle Wrapper, so a correct &amp; current project version of Gradle will automatically be installed and used to run the builds. To use the Gradle wrapper just look for `gradlew`  or `gradlew.bat` (Windows) in the project's main directory.</p>
+
+        <p>See the <a href='http://www.gradle.org/docs/current/userguide/gradle_wrapper.html'>Gradle Wrapper documentation for more details</a>. Then you can build an archive:</p>
+
+{% highlight bash %}
+cd  <PROJECTHOME>
+./gradlew clean assembleRelease
+
+# The archive (mapbox-android-sdk-<VERSION>.aar) will be found in
+<PROJECTHOME>/MapboxAndroidSDK/build/libs
+{% endhighlight %}
+
+        <div class='note'>
+          Don't forget to then also include the dependencies from <code>MapboxAndroidSDK / build.gradle</code> in your classpath.
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div class='prose pad2 doc round fill-white keyline-all'>
+
+<h2 id='Getting_started'>Getting Started</h2>
+
+<p>This guide will take you through the process of adding a map to your Android app. It assumes you have a Java IDE (like Eclipse or IntelliJ IDEA) with the <a href='http://developer.android.com/sdk/index.html'>Android SDK</a> installed, and an app project open.</p>
+
+<h2 id='required-permissions'>Required permissions</h2>
+
+<p>Ensure the following <em>core</em> permissions are requested in your <code>AndroidManifest.xml</code> file:</p>
+
+{% highlight xml %}
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+{% endhighlight %}
+
+<p>If your project needs to access location services, it'll also need the following permissions too:</p>
+
+{% highlight xml %}
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+{% endhighlight %}
+
+<h2 id='the-mapview'>The MapView</h2>
+
+<p>The <code>MapView</code> class is the key component of our library. It behaves like any other <code>ViewGroup</code> and its behavior can be changed statically with an <a href='http://developer.android.com/guide/topics/ui/declaring-layout.html'>XML layout</a> file, or programmatically during runtime.</p>
+
+<h3>XML layout</h3>
+<p>To add the <code>MapView</code> as a layout element, add the following to your xml file:</p>
+
+{% highlight xml %}
+<com.mapbox.mapboxsdk.views.MapView
+android:id="@+id/mapview"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+mapbox:mapid="Your MapBox mapid"
+mapbox:accessToken="Your Mapbox Access Token"/>
+{% endhighlight %}
+
+<p>And then you can call it programmatically with</p>
+
+{% highlight java %}
+this.findViewById(R.id.mapview);
+{% endhighlight %}
+
+<h3>On runtime</h3>
+
+<p>On runtime you can create a new MapView by specifying the context of the application and a valid <a href='https://www.mapbox.com/developers/api-overview/'>MapBox mapid</a>, a TileJSON file or a zxy image template.</p>
+
+{% highlight java %}
+MapView mapView = new MapView(context);
+mapView.setAccessToken("Your Mapbox Access Token");
+mapView.setTileSource(new MapboxTileLayer("examples.map-vyofok3q"));
+{% endhighlight %}
+
+And set it as the current view like this:
+
+{% highlight java %}
+this.setContentView(mapView);
+{% endhighlight %}
+
+<h2 id='overlays'>Overlays</h2>
+
+<p>Anything visual that is displayed over the map, maintaining its geographical position, we call it an <code>Overlay</code>. To access a MapView's overlays at any point during runtime, use:</p>
+
+{% highlight java %}
+mapView.getOverlays();
+{% endhighlight %}
+
+<h3>Markers</h3>
+
+<p>Adding a marker with the default styling is as simple as calling this for every marker you want to add:</p>
+
+{% highlight java %}
+Marker marker = new Marker(mapView, title, description, LatLng)
+mapView.addMarker(marker);
+{% endhighlight %}
+
+<h3>Location overlay</h3>
+
+<p>The location of the user can be displayed on the view using <code>UserLocationOverlay</code></p>
+
+{% highlight java %}
+UserLocationOverlay myLocationOverlay = new UserLocationOverlay(this, mapView);
+userLocationOverlay.enableMyLocation();
+userLocationOverlay.setDrawAccuracyEnabled(true);
+mapView.getOverlays().add(myLocationOverlay);
+{% endhighlight %}
+
+<h3>Paths</h3>
+
+<p>Paths are treated as any other <code>Overlay</code>, and are drawn like this:</p>
+
+{% highlight java %}
+PathOverlay line = new PathOverlay(Color.RED, 3);
+line.addPoint(new LatLng(51.2, 0.1));
+line.addPoint(new LatLng(51.7, 0.3));
+mapView.getOverlays().add(line);
+{% endhighlight %}
+
+<h3>Drawing anything into the map</h3>
+<p>To add anything with a higher degree of  customization you can declare your own <code>Overlay</code> subclass and define what to draw by overriding the <code>draw</code> method. It will give you a Canvas object for you to add anything to it:</p>
+
+{% highlight java %}
+class AnyOverlay extends Overlay{
+    @Override
+    protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
+        //do anything with the Canvas object
+    }
+}
+{% endhighlight %}
+
+<h2 id='screen-rotation'>Screen rotation</h2>
+<p>By default, every time the screen is rotated, Android will call <code>onCreate</code> and return all states in the app to their inital values. This includes current zoom level and position of the MapView. The simplest way to avoid this is adding this line to your <code>AndroidManifest.xml</code>, inside <code><activity></code>:</p>
+
+{% highlight java %}
+android:configChanges="orientation|screenSize|uiMode"
+{% endhighlight %}
+
+  <p>Alternatively you can override the methods <code>onSaveInstanceState()</code> and <code>onRestoreInstanceState()</code> to have broader control of the saved states in the app. See this <a href="http://stackoverflow.com/questions/4096169/onsaveinstancestate-and-onrestoreinstancestate">StackOverflow question</a> for more information on these methods.</p>
+
+<h2 id='including-sdk-javadoc'>Including SDK JavaDoc</h2>
+
+<p>JavaDocs are automatically generated and distributed with each official and SNAPSHOT release and can be downloaded for local viewing and / or integration with an IDE.</p>
+
+<ul>
+  <li><a href="http://search.maven.org/#search|ga|1|mapbox" target="_blank">Official Release</a></li>
+  <li><a href="https://oss.sonatype.org/content/repositories/snapshots/com/mapbox/mapboxsdk/mapbox-android-sdk/" target="_blank">SNAPSHOT Releases</a></li>
+</ul>
+
+<h2 id='generating-sdk-documentation'>Generating SDK Documentation (aka JavaDoc)</h2>
+
+{% highlight bash %}
+cd <PROJECT_HOME>/MapboxAndroidSDK/
+../gradlew clean assembleRelease generatereleaseJavadoc
+cd build/docs/javadoc
+open index.html
+{% endhighlight %}
+</div>
